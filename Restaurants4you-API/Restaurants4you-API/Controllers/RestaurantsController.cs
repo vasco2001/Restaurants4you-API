@@ -23,7 +23,7 @@ namespace Restaurant4you_API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User, Restaurant")]
         public List<Restaurants> ListRestaurants()
         {
             List<Restaurants> list = db.Restaurant.Select(x => new Restaurants
