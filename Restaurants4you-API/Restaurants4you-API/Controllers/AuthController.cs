@@ -67,6 +67,9 @@ namespace Restaurant4you_API.Controllers
 
             string token = CreateToken(user);
 
+            user.TokenCreated = DateTime.Now;
+            user.TokenExpires = DateTime.Now.AddDays(7);
+
             return Ok(token);
         }
 
