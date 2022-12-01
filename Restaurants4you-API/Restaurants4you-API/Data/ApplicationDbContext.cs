@@ -5,7 +5,7 @@ using Restaurant4you_API.Models;
 
 namespace Restaurant4you_API.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -17,6 +17,7 @@ namespace Restaurant4you_API.Data
         public DbSet<Images> Image { get; set; }
         public DbSet<Plate> Plates { get; set; }
         public DbSet<Restaurants> Restaurant { get; set; }
+        public DbSet<User> Users { get; set; }
 
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using Restaurant4you_API.Models;
 
 namespace JwtWebApiTutorial.Controllers
 {
@@ -21,11 +22,11 @@ namespace JwtWebApiTutorial.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDto request)
+        public async Task<ActionResult<User>> Register(String username, String password)
         {
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            user.Username = request.Username;
+            user.Username = username;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
@@ -33,14 +34,14 @@ namespace JwtWebApiTutorial.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(UserDto request)
+        public async Task<ActionResult<string>> Login(String username, String password)
         {
-            if (user.Username != request.Username)
+            if (user.Username != username)
             {
                 return BadRequest("User not found.");
             }
 
-            if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
                 return BadRequest("Wrong password.");
             }
