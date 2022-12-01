@@ -23,7 +23,7 @@ namespace Restaurant4you_API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public List<Restaurants> ListRestaurants()
         {
             List<Restaurants> list = db.Restaurant.Select(x => new Restaurants
@@ -43,6 +43,7 @@ namespace Restaurant4you_API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Restaurant")]
         public void AddRestaurant([FromForm] Restaurants rt)
         {
             db.Add(rt);
@@ -50,6 +51,7 @@ namespace Restaurant4you_API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Restaurant")]
         public void DeleteRestaurant(int id)
         {
             if (db.Restaurant.Find(id) != null)
@@ -75,6 +77,7 @@ namespace Restaurant4you_API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Restaurant")]
         public void EditRestaurant([FromForm] Restaurants rt)
         {
             if(db.Restaurant.Where(x => x.Id== rt.Id).Any())

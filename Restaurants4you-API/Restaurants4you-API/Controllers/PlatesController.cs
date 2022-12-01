@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Restaurant4you_API.Data;
 using Restaurant4you_API.Models;
+using System.Data;
 
 namespace Restaurant4you_API.Controllers
 {
@@ -18,6 +20,7 @@ namespace Restaurant4you_API.Controllers
 
         // GET: api/Plates
         [HttpGet]
+        [Authorize(Roles = "User, Restaurant")]
         public async Task<ActionResult<IEnumerable<Plate>>> GetPlates()
         {
             return await _context.Plates
@@ -36,6 +39,7 @@ namespace Restaurant4you_API.Controllers
 
         // GET: api/Plates/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "User, Restaurant")]
         public async Task<ActionResult<Plate>> GetPlate(int id)
         {
             var plate = await _context.Plates
@@ -63,6 +67,7 @@ namespace Restaurant4you_API.Controllers
         // PUT: api/Plates/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Restaurant")]
         public async Task<IActionResult> PutPlate(int id, [FromForm] Plate plate)
         {
             if (id != plate.Id)
@@ -94,6 +99,7 @@ namespace Restaurant4you_API.Controllers
         // POST: api/Plates
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Restaurant")]
         public async Task<ActionResult<Plate>> PostPlate([FromForm] Plate plate)
         {
             _context.Plates.Add(plate);
@@ -104,6 +110,7 @@ namespace Restaurant4you_API.Controllers
 
         // DELETE: api/Plates/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Restaurant")]
         public async Task<IActionResult> DeletePlate(int id)
         {
             var plate = await _context.Plates.FindAsync(id);

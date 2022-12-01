@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,7 @@ namespace Restaurant4you_API.Controllers
 
         // GET: api/Images
         [HttpGet]
+        [Authorize(Roles = "User, Restaurant")]
         public async Task<ActionResult<IEnumerable<Images>>> GetImage()
         {
             return await _context.Image
@@ -46,6 +48,7 @@ namespace Restaurant4you_API.Controllers
 
         // GET: api/Images/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "User, Restaurant")]
         public async Task<ActionResult<Images>> GetImages(int id)
         {
             var images = await _context.Image
@@ -72,6 +75,7 @@ namespace Restaurant4you_API.Controllers
         // PUT: api/Images/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Restaurant")]
         public async Task<IActionResult> PutImages(int id, [FromForm] Images images)
         {
             if (id != images.Id)
@@ -103,6 +107,7 @@ namespace Restaurant4you_API.Controllers
         // POST: api/Images
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Restaurant")]
         public async Task<ActionResult<Images>> PostImages([FromForm] Images images, IFormFile imagem)
         {
            
@@ -128,7 +133,7 @@ namespace Restaurant4you_API.Controllers
                 {
                     // pergunta ao servidor que endereço quer usar
                     string addressToStoreFile = _webHostEnvironment.WebRootPath;
-                    string newImageLocalization = Path.Combine(addressToStoreFile, "Fotos//Filmes");
+                    string newImageLocalization = Path.Combine(addressToStoreFile, "Fotos//");
                     // ver se a diretoria existe se não cria
                     if (!Directory.Exists(newImageLocalization))
                     {
@@ -149,6 +154,7 @@ namespace Restaurant4you_API.Controllers
 
         // DELETE: api/Images/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Restaurant")]
         public async Task<IActionResult> DeleteImages(int id)
         {
             var images = await _context.Image.FindAsync(id);
