@@ -6,44 +6,63 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Restaurant4you_API.Models;
+using Restaurant4you_API.Data;
+using Microsoft.EntityFrameworkCore;
 
-namespace JwtWebApiTutorial.Controllers
+namespace Restaurant4you_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static User user = new User();
+        private readonly ApplicationDbContext db;
+        //public static User user = new User();
         private readonly IConfiguration _configuration;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(IConfiguration configuration, ApplicationDbContext db)
         {
             _configuration = configuration;
+            this.db = db;
         }
 
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(String username, String password)
         {
-            CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
+            if (!db.Users.Where(x => x.Username == username).Any())
+            {
+                User user = new User();
 
-            user.Username = username;
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
+                CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            return Ok(user);
+                user.Username = username;
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
+                user.Role = "User";
+
+                db.Users.Add(user);
+                db.SaveChanges();
+
+                return Ok(user);
+            }
+            else
+            {
+                return BadRequest("Nome de utilizador já esta a ser utilizado.");
+            }
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(String username, String password)
         {
+            User user = db.Users.Where(a => a.Username == username).FirstOrDefault();
+
             if (user.Username != username)
             {
-                return BadRequest("User not found.");
+                return BadRequest("Utilizador não encontrado.");
             }
 
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
-                return BadRequest("Wrong password.");
+                return BadRequest("Password incorreta.");
             }
 
             string token = CreateToken(user);
@@ -57,7 +76,7 @@ namespace JwtWebApiTutorial.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, "Admin")
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
@@ -67,7 +86,7 @@ namespace JwtWebApiTutorial.Controllers
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: user.TokenExpires,
                 signingCredentials: creds);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);

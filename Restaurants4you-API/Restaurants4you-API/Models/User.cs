@@ -8,5 +8,6 @@
         public byte[] PasswordSalt { get; set; }
         public DateTime TokenCreated { get; set; }
         public DateTime TokenExpires { get; set; }
+        public String Role { get; set; }
     }
 }
