@@ -69,6 +69,17 @@ namespace Restaurant4you_API.Models {
         public String Time { get; set; }
 
         /// <summary>
+        /// 
+        /// Latitude do restaurante
+        /// </summary>
+        public double Latitude { get; set; }
+
+        /// <summary>
+        /// Longitude do restaurante
+        /// </summary>
+        public double Longitude { get; set; }
+
+        /// <summary>
         /// Lista de imagens
         /// </summary>
         public ICollection<Images> Images { get; set; }

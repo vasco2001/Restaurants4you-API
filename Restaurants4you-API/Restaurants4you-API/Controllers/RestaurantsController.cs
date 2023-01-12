@@ -35,6 +35,8 @@ namespace Restaurant4you_API.Controllers
                 Contact = x.Contact,
                 Email = x.Email,
                 Time = x.Time,
+                Latitude= x.Latitude,
+                Longitude= x.Longitude,
                 Plates = db.Plates.Where(y => y.RestaurantFK == x.Id).ToList(),
                 Images = db.Image.Where(y => y.RestaurantFK == x.Id).ToList()
 
@@ -88,6 +90,8 @@ namespace Restaurant4you_API.Controllers
                 upd.Time = rt.Time;
                 upd.Contact = rt.Contact;
                 upd.Email = rt.Email;
+                upd.Longitude = rt.Longitude;
+                upd.Latitude = rt.Latitude;
                 
                 db.SaveChanges();
             }
