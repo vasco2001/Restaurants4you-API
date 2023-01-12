@@ -26,7 +26,7 @@ namespace Restaurant4you_API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(String username, String password)
+        public async Task<ActionResult<User>> Register([FromForm]String username, [FromForm] String password)
         {
             if (!db.Users.Where(x => x.Username == username).Any())
             {
