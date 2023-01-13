@@ -44,6 +44,7 @@ namespace Restaurant4you_API.Controllers
             return list;
         }
 
+        [Consumes("multipart/form-data")]
         [HttpPost]
         [Authorize(Roles = "Restaurant")]
         public void AddRestaurant([FromForm] Restaurants rt)
@@ -52,9 +53,10 @@ namespace Restaurant4you_API.Controllers
             db.SaveChanges();
         }
 
+        [Consumes("multipart/form-data")]
         [HttpDelete("{id}")]
         [Authorize(Roles = "Restaurant")]
-        public void DeleteRestaurant(int id)
+        public void DeleteRestaurant([FromForm] int id)
         {
             if (db.Restaurant.Find(id) != null)
             {
@@ -78,6 +80,7 @@ namespace Restaurant4you_API.Controllers
             }
         }
 
+        [Consumes("multipart/form-data")]
         [HttpPut]
         [Authorize(Roles = "Restaurant")]
         public void EditRestaurant([FromForm] Restaurants rt)

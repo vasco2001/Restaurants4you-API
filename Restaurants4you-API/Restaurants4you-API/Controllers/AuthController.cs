@@ -25,6 +25,7 @@ namespace Restaurant4you_API.Controllers
             this.db = db;
         }
 
+        [Consumes("multipart/form-data")]
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register([FromForm]String username, [FromForm] String password)
         {
@@ -50,8 +51,9 @@ namespace Restaurant4you_API.Controllers
             }
         }
 
+        [Consumes("multipart/form-data")]
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(String username, String password)
+        public async Task<ActionResult<string>> Login([FromForm] String username, [FromForm] String password)
         {
             User user = db.Users.Where(a => a.Username == username).FirstOrDefault();
 

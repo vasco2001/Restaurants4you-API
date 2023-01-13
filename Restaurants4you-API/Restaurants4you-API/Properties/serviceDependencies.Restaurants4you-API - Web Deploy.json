@@ -1,14 +1,15 @@
 {
   "dependencies": {
-    "apis1": {
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/Restaurants4you-API/apis/Restaurants4you-API",
-      "type": "apis.azure"
-    },
     "mssql1": {
       "secretStore": "AzureAppSettings",
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/restaurants4you-apidbserver/databases/Restaurants4you-API_db",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:DefaultConnection"
+    },
+    "apis1": {
+      "apiEndpoint": "https://restaurants4you-api.azure-api.net/",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/Restaurants4you-API/apis/Restaurants4you-API",
+      "type": "apis.azure"
     }
   }
 }

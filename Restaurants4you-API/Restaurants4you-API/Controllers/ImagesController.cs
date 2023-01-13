@@ -74,9 +74,10 @@ namespace Restaurant4you_API.Controllers
 
         // PUT: api/Images/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Consumes("multipart/form-data")]
         [HttpPut("{id}")]
         [Authorize(Roles = "Restaurant")]
-        public async Task<IActionResult> PutImages(int id, [FromForm] Images images)
+        public async Task<IActionResult> PutImages([FromForm]int id, [FromForm] Images images)
         {
             if (id != images.Id)
             {
@@ -106,6 +107,7 @@ namespace Restaurant4you_API.Controllers
 
         // POST: api/Images
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Consumes("multipart/form-data")]
         [HttpPost]
         [Authorize(Roles = "Restaurant")]
         public async Task<ActionResult<Images>> PostImages([FromForm] Images images, IFormFile imagem)
@@ -153,9 +155,10 @@ namespace Restaurant4you_API.Controllers
         }
 
         // DELETE: api/Images/5
+        [Consumes("multipart/form-data")]
         [HttpDelete("{id}")]
         [Authorize(Roles = "Restaurant")]
-        public async Task<IActionResult> DeleteImages(int id)
+        public async Task<IActionResult> DeleteImages([FromForm]int id)
         {
             var images = await _context.Image.FindAsync(id);
             if (images == null)
