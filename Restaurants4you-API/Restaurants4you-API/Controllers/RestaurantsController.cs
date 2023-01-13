@@ -24,9 +24,9 @@ namespace Restaurant4you_API.Controllers
 
         [HttpGet]
         [Authorize(Roles = "User, Restaurant")]
-        public List<Restaurants> ListRestaurants()
+        public async Task<ActionResult<IEnumerable<Restaurants>>> ListRestaurants()
         {
-            List<Restaurants> list = db.Restaurant.Select(x => new Restaurants
+            List<Restaurants> list = await db.Restaurant.Select(x => new Restaurants
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -40,23 +40,58 @@ namespace Restaurant4you_API.Controllers
                 Plates = db.Plates.Where(y => y.RestaurantFK == x.Id).ToList(),
                 Images = db.Image.Where(y => y.RestaurantFK == x.Id).ToList()
 
-            }).ToList();
+            }).ToListAsync();
             return list;
+        }
+
+        [HttpGet("{id}")]
+        [Authorize(Roles = "User, Restaurant")]
+        public async Task<ActionResult<Restaurants>> GetRestaurant([FromForm]int id)
+        {
+            var rt = await db.Restaurant
+                              .Include(a => a.Plates)
+                              .Include(a => a.Images)
+                              .OrderByDescending(a => a.Id)
+                              .Select(a => new Restaurants
+                              {
+                                  Id = a.Id,
+                                  Name = a.Name,
+                                  Description = a.Description,
+                                  Latitude = a.Latitude,
+                                  Longitude = a.Longitude,
+                                  Localization= a.Localization,
+                                  Contact = a.Contact,
+                                  Email = a.Email,
+                                  Time=a.Time,
+                                  Plates = db.Plates.Where(y => y.RestaurantFK == a.Id).ToList(),
+                                  Images = db.Image.Where(y => y.RestaurantFK == a.Id).ToList()
+
+                              })
+                              .Where(a => a.Id == id)
+                              .FirstOrDefaultAsync();
+
+            if (rt == null)
+            {
+                return NotFound();
+            }
+
+            return rt;
         }
 
         [Consumes("multipart/form-data")]
         [HttpPost]
         [Authorize(Roles = "Restaurant")]
-        public void AddRestaurant([FromForm] Restaurants rt)
+        public async Task<ActionResult<Restaurants>> AddRestaurant([FromForm] Restaurants rt)
         {
             db.Add(rt);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
+            return Ok(rt);
         }
 
         [Consumes("multipart/form-data")]
         [HttpDelete("{id}")]
         [Authorize(Roles = "Restaurant")]
-        public void DeleteRestaurant([FromForm] int id)
+        public async Task<IActionResult> DeleteRestaurant([FromForm] int id)
         {
             if (db.Restaurant.Find(id) != null)
             {
@@ -76,14 +111,16 @@ namespace Restaurant4you_API.Controllers
                 }
 
                 db.Restaurant.Remove(db.Restaurant.Find(id));
-                db.SaveChanges();
+                await db.SaveChangesAsync();
+                return Ok();
             }
+            return NotFound();
         }
 
         [Consumes("multipart/form-data")]
         [HttpPut]
         [Authorize(Roles = "Restaurant")]
-        public void EditRestaurant([FromForm] Restaurants rt)
+        public async Task<IActionResult> EditRestaurant([FromForm] Restaurants rt)
         {
             if(db.Restaurant.Where(x => x.Id== rt.Id).Any())
             {
@@ -96,8 +133,11 @@ namespace Restaurant4you_API.Controllers
                 upd.Longitude = rt.Longitude;
                 upd.Latitude = rt.Latitude;
                 
-                db.SaveChanges();
+                await db.SaveChangesAsync();
+                return NoContent();
             }
+
+            return NotFound();
         }
 
     }
