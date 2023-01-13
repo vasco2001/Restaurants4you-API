@@ -112,7 +112,7 @@ namespace Restaurant4you_API.Controllers
 
                 db.Restaurant.Remove(db.Restaurant.Find(id));
                 await db.SaveChangesAsync();
-                return Ok();
+                return NoContent();
             }
             return NotFound();
         }
