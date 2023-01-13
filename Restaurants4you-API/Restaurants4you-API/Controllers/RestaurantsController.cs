@@ -118,7 +118,7 @@ namespace Restaurant4you_API.Controllers
         }
 
         [Consumes("multipart/form-data")]
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize(Roles = "Restaurant")]
         public async Task<IActionResult> EditRestaurant([FromForm] Restaurants rt)
         {
