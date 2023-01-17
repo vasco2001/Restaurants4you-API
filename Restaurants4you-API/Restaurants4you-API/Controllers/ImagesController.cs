@@ -77,7 +77,7 @@ namespace Restaurant4you_API.Controllers
         [Consumes("multipart/form-data")]
         [HttpPut("{id}")]
         [Authorize(Roles = "Restaurant")]
-        public async Task<IActionResult> PutImages([FromForm]int id, [FromForm] Images images)
+        public async Task<IActionResult> PutImages(int id, [FromForm] Images images)
         {
             if (id != images.Id)
             {
@@ -158,7 +158,7 @@ namespace Restaurant4you_API.Controllers
         [Consumes("multipart/form-data")]
         [HttpDelete("{id}")]
         [Authorize(Roles = "Restaurant")]
-        public async Task<IActionResult> DeleteImages([FromForm]int id)
+        public async Task<IActionResult> DeleteImages(int id)
         {
             var images = await _context.Image.FindAsync(id);
             if (images == null)

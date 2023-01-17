@@ -55,12 +55,13 @@ namespace Restaurant4you_API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login([FromForm] String username, [FromForm] String password)
         {
-            User user = db.Users.Where(a => a.Username == username).FirstOrDefault();
-
-            if (user.Username != username)
+            if (!db.Users.Where(a => a.Username == username).Any())
             {
                 return BadRequest("Utilizador não encontrado.");
             }
+
+            User user = db.Users.Where(a => a.Username == username).FirstOrDefault();
+                        
 
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
@@ -74,6 +75,42 @@ namespace Restaurant4you_API.Controllers
             db.SaveChanges();
 
             return Ok(token);
+        }
+
+        [HttpGet("Username")]
+        [Authorize(Roles = "User, Restaurant")]
+        public async Task<ActionResult<string>> GetUsername()
+        {
+            var identity = User.Identity as ClaimsIdentity;
+            var username = identity.Claims.FirstOrDefault(c => c.Type == "username").Value;
+
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Username == username);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user.Username);
+
+        }
+
+        [HttpGet("Roles")]
+        [Authorize(Roles = "User, Restaurant")]
+        public async Task<ActionResult<string>> GetRoles()
+        {
+            var identity = User.Identity as ClaimsIdentity;
+            var username = identity.Claims.FirstOrDefault(c => c.Type == "username").Value;
+
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Username == username);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user.Role);
+
         }
 
 

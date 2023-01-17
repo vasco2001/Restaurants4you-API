@@ -46,7 +46,7 @@ namespace Restaurant4you_API.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Roles = "User, Restaurant")]
-        public async Task<ActionResult<Restaurants>> GetRestaurant([FromForm]int id)
+        public async Task<ActionResult<Restaurants>> GetRestaurant(int id)
         {
             var rt = await db.Restaurant
                               .Include(a => a.Plates)
@@ -91,7 +91,7 @@ namespace Restaurant4you_API.Controllers
         [Consumes("multipart/form-data")]
         [HttpDelete("{id}")]
         [Authorize(Roles = "Restaurant")]
-        public async Task<IActionResult> DeleteRestaurant([FromForm] int id)
+        public async Task<IActionResult> DeleteRestaurant(int id)
         {
             if (db.Restaurant.Find(id) != null)
             {

@@ -28,7 +28,6 @@ namespace Restaurant4you_API.Models {
         /// </summary>
         [StringLength(32, ErrorMessage = "O {0} não pode ter mais do que {1} carateres.")]
         [Display(Name = "Nome")]
-        [RegularExpression("[A-ZÂÓÍa-záéíóúàèìòùâêîôûãõäëïöüñç '-]+", ErrorMessage = "Só pode escrever letras no {0}")]
         [Required(ErrorMessage = "O {0} é de preenchimento obrigatório.")]
         public String Name { get; set; }
 
@@ -37,7 +36,6 @@ namespace Restaurant4you_API.Models {
         /// </summary>
         [StringLength(256, ErrorMessage = "O {0} não pode ter mais do que {1} carateres.")]
         [Display(Name = "Descrição")]
-        [RegularExpression("[A-ZÂÓÍa-záéíóúàèìòùâêîôûãõäëïöüñç '-]+", ErrorMessage = "Só pode escrever letras no {0}")]
         public String Description { get; set; }
 
         /// <summary>
@@ -52,7 +50,7 @@ namespace Restaurant4you_API.Models {
         /// </summary>
         [Display(Name = "Contacto")]
         [Required(ErrorMessage = "O {0} é de preenchimento obrigatório")]
-        [RegularExpression("[9,2]{1}[0-9]{8}", ErrorMessage = "Insira um {0} válido.")]
+        [RegularExpression("[9,2]{1}[0-9]{8}", ErrorMessage = "Insira um {0} válido, coloque no formato 9xxxxxxxx.")]
         public String  Contact { get; set; }
 
         /// <summary>
