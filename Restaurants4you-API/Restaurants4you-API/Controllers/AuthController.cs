@@ -81,10 +81,10 @@ namespace Restaurant4you_API.Controllers
         [Authorize(Roles = "User, Restaurant")]
         public async Task<ActionResult<string>> GetUsername()
         {
-            var identity = User.Identity as ClaimsIdentity;
-            var username = identity.Claims.FirstOrDefault(c => c.Type == "username").Value;
+            var identity = User.Identity.Name;
+            //var username = identity.Claims.FirstOrDefault(c => c.Type == "username").Value;
 
-            var user = await db.Users.FirstOrDefaultAsync(x => x.Username == username);
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Username == identity);
 
             if (user == null)
             {
@@ -99,10 +99,10 @@ namespace Restaurant4you_API.Controllers
         [Authorize(Roles = "User, Restaurant")]
         public async Task<ActionResult<string>> GetRoles()
         {
-            var identity = User.Identity as ClaimsIdentity;
-            var username = identity.Claims.FirstOrDefault(c => c.Type == "username").Value;
+            var identity = User.Identity.Name;
+            //var username = identity.Claims.FirstOrDefault(c => c.Type == "username").Value;
 
-            var user = await db.Users.FirstOrDefaultAsync(x => x.Username == username);
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Username == identity);
 
             if (user == null)
             {
