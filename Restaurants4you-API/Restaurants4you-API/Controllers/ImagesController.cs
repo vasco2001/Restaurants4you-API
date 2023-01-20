@@ -109,14 +109,14 @@ namespace Restaurant4you_API.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Consumes("multipart/form-data")]
         [HttpPost]
-        [Authorize(Roles = "Restaurant")]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<Images>> PostImages([FromForm] Images images, IFormFile imagem)
         {
            
-            if (!(imagem.ContentType == "image/jpeg" || imagem.ContentType == "image/png" || imagem.ContentType == "image/jpg"))
+            if (!(imagem.FileName.EndsWith(".jpeg") || imagem.FileName.EndsWith(".png") || imagem.FileName.EndsWith(".jpg")))
                 {
                     // menssagem de erro
-                   return BadRequest("Por favor, se pretende enviar um ficheiro, escolha uma imagem suportada.");
+                    ModelState.AddModelError("", "Por favor, se pretende enviar um ficheiro, escolha uma imagem suportada.");
                 }
                 else
                 {
