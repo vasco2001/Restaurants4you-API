@@ -25,6 +25,7 @@ namespace Restaurant4you_API.Models
         /// </summary>
         [ForeignKey(nameof(Restaurant))]
         public int RestaurantFK { get; set; }
+
         public Restaurants Restaurant { get; set; }
     }
 }

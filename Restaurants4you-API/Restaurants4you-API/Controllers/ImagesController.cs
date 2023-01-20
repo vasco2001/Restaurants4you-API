@@ -116,7 +116,7 @@ namespace Restaurant4you_API.Controllers
             if (!(imagem.ContentType == "image/jpeg" || imagem.ContentType == "image/png" || imagem.ContentType == "image/jpg"))
                 {
                     // menssagem de erro
-                    ModelState.AddModelError("", "Por favor, se pretende enviar um ficheiro, escolha uma imagem suportada.");
+                   return BadRequest("Por favor, se pretende enviar um ficheiro, escolha uma imagem suportada.");
                 }
                 else
                 {
