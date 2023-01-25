@@ -50,7 +50,7 @@ namespace Restaurant4you_API.Models {
         /// </summary>
         [Display(Name = "Contacto")]
         [Required(ErrorMessage = "O {0} é de preenchimento obrigatório")]
-        [RegularExpression("[9,2]{1}[0-9]{8}", ErrorMessage = "Insira um {0} válido, coloque no formato 9xxxxxxxx.")]
+        [RegularExpression("[\"]{1}[2,8,7,9]{1}[0-9]{8}[\"]{1}", ErrorMessage = "Insira um {0} válido, coloque no formato 9xxxxxxxx.")]
         public String  Contact { get; set; }
 
         /// <summary>
