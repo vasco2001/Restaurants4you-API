@@ -113,6 +113,24 @@ namespace Restaurant4you_API.Controllers
 
         }
 
+        [HttpGet("Id")]
+        [Authorize(Roles = "User, Restaurant")]
+        public async Task<ActionResult<string>> GetId()
+        {
+            var identity = User.Identity.Name;
+            //var username = identity.Claims.FirstOrDefault(c => c.Type == "username").Value;
+
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Username == identity);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user.Id);
+
+        }
+
 
         private string CreateToken(User user)
         {

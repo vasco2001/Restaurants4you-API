@@ -37,7 +37,6 @@ namespace Restaurant4you_API.Controllers
                 Time = x.Time,
                 Latitude= x.Latitude,
                 Longitude= x.Longitude,
-                Plates = db.Plates.Where(y => y.RestaurantFK == x.Id).ToList(),
                 Images = db.Image.Where(y => y.RestaurantFK == x.Id).ToList()
 
             }).ToListAsync();
@@ -49,7 +48,6 @@ namespace Restaurant4you_API.Controllers
         public async Task<ActionResult<Restaurants>> GetRestaurant(int id)
         {
             var rt = await db.Restaurant
-                              .Include(a => a.Plates)
                               .Include(a => a.Images)
                               .OrderByDescending(a => a.Id)
                               .Select(a => new Restaurants
@@ -63,7 +61,6 @@ namespace Restaurant4you_API.Controllers
                                   Contact = a.Contact,
                                   Email = a.Email,
                                   Time=a.Time,
-                                  Plates = db.Plates.Where(y => y.RestaurantFK == a.Id).ToList(),
                                   Images = db.Image.Where(y => y.RestaurantFK == a.Id).ToList()
 
                               })
@@ -83,6 +80,10 @@ namespace Restaurant4you_API.Controllers
         [Authorize(Roles = "Restaurant")]
         public async Task<ActionResult<Restaurants>> AddRestaurant([FromForm] Restaurants rt)
         {
+            var identity = User.Identity.Name;
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Username == identity);
+            rt.UserFK = user.Id;
+
             db.Add(rt);
             await db.SaveChangesAsync();
             return Ok(rt);
@@ -103,11 +104,6 @@ namespace Restaurant4you_API.Controllers
                         System.IO.File.Delete("wwwroot//Fotos//" + Path.Combine(img.Path));
                     }                    
                     db.Image.RemoveRange(db.Image.Where(x => x.RestaurantFK == id));
-                }
-
-                if (db.Plates.Where(x => x.RestaurantFK == id).Any())
-                {
-                    db.Plates.RemoveRange(db.Plates.Where(x => x.RestaurantFK == id));
                 }
 
                 db.Restaurant.Remove(db.Restaurant.Find(id));
@@ -134,10 +130,45 @@ namespace Restaurant4you_API.Controllers
                 upd.Latitude = rt.Latitude;
                 
                 await db.SaveChangesAsync();
-                return NoContent();
+                return Ok();
             }
 
             return NotFound();
+        }
+
+        [HttpGet("User/{id}")]
+        [Authorize(Roles = "Restaurant")]
+        public async Task<ActionResult<IEnumerable<Restaurants>>> ListRestaurants(int id)
+        {
+            if(!db.Restaurant.Where(x => x.UserFK == id).Any()) return BadRequest();
+
+            List<Restaurants> list = await db.Restaurant
+                              .Include(a => a.Images)
+                              .OrderByDescending(a => a.Id)
+                              .Select(a => new Restaurants
+                              {
+                                  Id = a.Id,
+                                  Name = a.Name,
+                                  Description = a.Description,
+                                  Latitude = a.Latitude,
+                                  Longitude = a.Longitude,
+                                  Localization = a.Localization,
+                                  Contact = a.Contact,
+                                  Email = a.Email,
+                                  Time = a.Time,
+                                  UserFK = a.UserFK,
+                                  Images = db.Image.Where(y => y.RestaurantFK == a.Id).ToList()
+
+                              })
+                              .Where(a => a.UserFK == id)
+                              .ToListAsync();
+
+            if (list == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(list);
         }
 
     }

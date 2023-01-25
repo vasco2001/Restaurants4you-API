@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
 
 namespace Restaurant4you_API.Models {
@@ -12,8 +13,7 @@ namespace Restaurant4you_API.Models {
         /// Construtor da classe
         /// </summary>
         public Restaurants() {
-            //inicializar as listas dos pratos e imagens
-            Plates = new HashSet<Plate>();
+            //inicializar a lista das imagens
             Images = new HashSet<Images>();
 
         }
@@ -50,13 +50,14 @@ namespace Restaurant4you_API.Models {
         /// </summary>
         [Display(Name = "Contacto")]
         [Required(ErrorMessage = "O {0} é de preenchimento obrigatório")]
-        [RegularExpression("[\"]{1}[2,8,7,9]{1}[0-9]{8}[\"]{1}", ErrorMessage = "Insira um {0} válido, coloque no formato 9xxxxxxxx.")]
+        [RegularExpression("[2,8,7,9]{1}[0-9]{8}", ErrorMessage = "Insira um {0} válido, coloque no formato 9xxxxxxxx.")]
         public String  Contact { get; set; }
 
         /// <summary>
         /// Email do Restaurante
         /// </summary>
         [Display(Name = "Email")]
+        [EmailAddress]
         public String Email { get; set; }
 
         /// <summary>
@@ -66,25 +67,27 @@ namespace Restaurant4you_API.Models {
         public String Time { get; set; }
 
         /// <summary>
-        /// 
         /// Latitude do restaurante
         /// </summary>
-        public String Latitude { get; set; }
+        public Double Latitude { get; set; }
 
         /// <summary>
         /// Longitude do restaurante
         /// </summary>
-        public String Longitude { get; set; }
+        public Double Longitude { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(User))]
+        public int UserFK { get; set; }
+
+        public User User { get; set; }
 
         /// <summary>
         /// Lista de imagens
         /// </summary>
         public ICollection<Images> Images { get; set; }
 
-        /// <summary>
-        /// Lista de pratos
-        /// </summary>
-        public ICollection<Plate> Plates { get; set; }
+
 
 
     }

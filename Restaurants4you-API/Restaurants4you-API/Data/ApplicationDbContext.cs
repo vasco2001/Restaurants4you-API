@@ -15,7 +15,6 @@ namespace Restaurant4you_API.Data
         // define table on the database
 
         public DbSet<Images> Image { get; set; }
-        public DbSet<Plate> Plates { get; set; }
         public DbSet<Restaurants> Restaurant { get; set; }
         public DbSet<User> Users { get; set; }
 
