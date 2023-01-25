@@ -109,7 +109,7 @@ namespace Restaurant4you_API.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Consumes("multipart/form-data")]
         [HttpPost]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User, Restaurant")]
         public async Task<ActionResult<Images>> PostImages([FromForm] Images images, IFormFile imagem)
         {
            
