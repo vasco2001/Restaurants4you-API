@@ -57,7 +57,6 @@ namespace Restaurant4you_API.Models {
         /// Email do Restaurante
         /// </summary>
         [Display(Name = "Email")]
-        [EmailAddress(ErrorMessage = "Escreva um {0} válido, por favor.")]
         public String Email { get; set; }
 
         /// <summary>
@@ -70,12 +69,12 @@ namespace Restaurant4you_API.Models {
         /// 
         /// Latitude do restaurante
         /// </summary>
-        public double Latitude { get; set; }
+        public String Latitude { get; set; }
 
         /// <summary>
         /// Longitude do restaurante
         /// </summary>
-        public double Longitude { get; set; }
+        public String Longitude { get; set; }
 
         /// <summary>
         /// Lista de imagens
