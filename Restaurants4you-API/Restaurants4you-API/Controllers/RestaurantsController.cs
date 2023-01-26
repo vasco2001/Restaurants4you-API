@@ -136,11 +136,14 @@ namespace Restaurant4you_API.Controllers
             return NotFound();
         }
 
-        [HttpGet("User/{id}")]
+        [HttpGet("User")]
         [Authorize(Roles = "Restaurant")]
-        public async Task<ActionResult<IEnumerable<Restaurants>>> ListRestaurants(int id)
+        public async Task<ActionResult<IEnumerable<Restaurants>>> ListRestaurantsUser()
         {
-            if(!db.Restaurant.Where(x => x.UserFK == id).Any()) return BadRequest();
+            var identity = User.Identity.Name;
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Username == identity);
+
+            if (!db.Restaurant.Where(x => x.UserFK == user.Id).Any()) return Ok(new List<Restaurants>());
 
             List<Restaurants> list = await db.Restaurant
                               .Include(a => a.Images)
@@ -160,7 +163,7 @@ namespace Restaurant4you_API.Controllers
                                   Images = db.Image.Where(y => y.RestaurantFK == a.Id).ToList()
 
                               })
-                              .Where(a => a.UserFK == id)
+                              .Where(a => a.UserFK == user.Id)
                               .ToListAsync();
 
             if (list == null)
