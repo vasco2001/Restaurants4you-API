@@ -94,6 +94,12 @@ namespace Restaurant4you_API.Controllers
         [Authorize(Roles = "Restaurant")]
         public async Task<IActionResult> DeleteRestaurant(int id)
         {
+            var identity = User.Identity.Name;
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Username == identity);
+
+            if (!db.Restaurant.Where(x => x.UserFK == user.Id && x.Id == id).Any())
+                return BadRequest();
+
             if (db.Restaurant.Find(id) != null)
             {
                 if(db.Image.Where(x=> x.RestaurantFK == id).Any())
