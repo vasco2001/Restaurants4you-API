@@ -122,9 +122,15 @@ namespace Restaurant4you_API.Controllers
         [Consumes("multipart/form-data")]
         [HttpPut("{id}")]
         [Authorize(Roles = "Restaurant")]
-        public async Task<IActionResult> EditRestaurant([FromForm] Restaurants rt)
+        public async Task<ActionResult<Restaurants>> EditRestaurant([FromForm] Restaurants rt)
         {
-            if(db.Restaurant.Where(x => x.Id== rt.Id).Any())
+            var identity = User.Identity.Name;
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Username == identity);
+
+            if (!db.Restaurant.Where(x => x.UserFK == user.Id && x.Id == rt.Id).Any())
+                return BadRequest();
+
+            if (db.Restaurant.Where(x => x.Id== rt.Id).Any())
             {
                 Restaurants upd = db.Restaurant.Find(rt.Id);
                 upd.Description = rt.Description;
@@ -136,7 +142,7 @@ namespace Restaurant4you_API.Controllers
                 upd.Latitude = rt.Latitude;
                 
                 await db.SaveChangesAsync();
-                return Ok();
+                return Ok(upd);
             }
 
             return NotFound();
